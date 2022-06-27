@@ -1,0 +1,60 @@
+1. Delete all rows with missing data.
+2. Delete rows with missing data in specific variables.
+3. change missing data to a value.
+4. Change a specific value to missing data.
+5. Imputation.
+
+library(tidyverse)
+View(starwars)
+
+starwars%>%
+          select(name,gender, hair_color, height) %>%
+          View()
+
+starwars%>%
+          select(name,gender, hair_color, height) %>%
+          filter(!complete.cases(.))%>%
+           View()           --- not have missing data
+                                  
+#millions of obs  - packages => mice
+
+library(mice)
+md.pattern(starwars) 
+
+ starwars%>%                                         ---- bad startegy (1)
+          select(name,gender, hair_color, height) %>%
+          na.omit() %>%
+          View() 
+
+2. 
+
+starwars%>%
+          select(name,gender, hair_color, height) %>%
+             drop_na(height)%>%
+             filter(!complete.cases(.))%>%
+             View()
+
+3. chnage values
+
+starwars%>%
+          select(name,gender, hair_color, height) %>%
+             drop_na(height)%>%
+             mutate(gender = replace_na(gender, "none"))%>%
+             filter(!complete.cases(.))%>%
+             View()
+
+4. Change a specific value to missing data.
+
+       unique(starwars$hair_color)
+
+    starwars%>%
+          select(name,gender, hair_color, height) %>%
+             mutate(hair_color = na_if(hair_color, "unknown"))%>%
+        filter(is.na(hair_color))%>%
+         View()
+
+
+mean(starwars$height) = NA
+mean(starwars$height, na.rm = TRUE)
+
+
